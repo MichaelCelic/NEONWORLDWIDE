@@ -191,6 +191,14 @@ main {
     margin: 2rem 0;
 }
 
+.powered-by {
+    color: var(--text-gray);
+    font-size: 1.1em;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
 .slogan {
     font-size: 2.5em;
     color: var(--neon-red);
@@ -405,25 +413,49 @@ footer {
 }
 
 /* Responsive Design */
+
+/* Tablet and below */
+@media (max-width: 1024px) {
+    main {
+        padding: 1.5rem;
+    }
+
+    .hero-section {
+        padding: 3rem 1.5rem;
+    }
+
+    .content-section {
+        padding: 1.5rem;
+    }
+}
+
+/* Mobile devices */
 @media (max-width: 768px) {
+    /* Header optimizations */
+    header {
+        padding: 0.75rem 1rem;
+    }
+
     .header-content {
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 0.75rem;
     }
 
     .logo-left,
     .logo-right {
         flex: 1;
         justify-content: center;
+        min-width: 0;
     }
 
     .header-logo {
-        max-height: 40px;
+        max-height: 35px;
     }
 
     nav {
         order: 3;
         width: 100%;
+        margin-top: 0.5rem;
     }
 
     nav ul {
@@ -437,24 +469,266 @@ footer {
     }
 
     nav ul li a {
-        display: block;
         text-align: center;
+        padding: 0.75rem 1rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95em;
     }
 
+    /* Main content */
+    main {
+        padding: 1rem;
+        min-height: calc(100vh - 150px);
+    }
+
+    .container {
+        padding: 0;
+    }
+
+    /* Typography */
     h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+    }
+
+    h2 {
+        font-size: 1.4em;
+        line-height: 1.3;
+    }
+
+    h3 {
+        font-size: 1.2em;
+    }
+
+    .powered-by {
+        font-size: 0.9em;
+        letter-spacing: 1.5px;
+        margin-top: 0.25rem;
     }
 
     .slogan {
-        font-size: 1.5em;
+        font-size: 1.2em;
+        letter-spacing: 2px;
+        margin: 1.5rem 0;
+        line-height: 1.4;
     }
 
+    /* Hero section */
+    .hero-section {
+        padding: 2rem 1rem;
+        margin: 1rem 0;
+        border-width: 1px;
+    }
+
+    /* Content sections */
+    .content-section {
+        padding: 1.5rem 1rem;
+        margin: 1rem 0;
+    }
+
+    .content-section h2 {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        font-size: 1.3em;
+    }
+
+    /* Product grid */
     .product-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
     }
 
+    .product-card {
+        padding: 1.5rem 1rem;
+    }
+
+    /* Forms */
     .form-container {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
+        margin: 1rem 0;
+        border-width: 1px;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.875rem;
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 44px;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+    }
+
+    .btn {
+        padding: 1rem 1.5rem;
+        font-size: 1em;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Footer */
+    footer {
+        padding: 1.5rem 1rem;
+        margin-top: 2rem;
+    }
+
+    .footer-content p {
+        font-size: 0.85em;
+        line-height: 1.6;
+    }
+
+    /* Thank you overlay */
+    .thank-you-message {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    .thank-you-message h2 {
+        font-size: 1.8em;
+    }
+
+    .thank-you-message p {
+        font-size: 1em;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    /* Header */
+    header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .header-logo {
+        max-height: 30px;
+    }
+
+    nav ul li a {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.9em;
+    }
+
+    /* Typography */
+    h1 {
+        font-size: 1.3em;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    h3 {
+        font-size: 1.1em;
+    }
+
+    .powered-by {
+        font-size: 0.8em;
+        letter-spacing: 1px;
+    }
+
+    .slogan {
+        font-size: 1em;
+        letter-spacing: 1px;
+        margin: 1rem 0;
+    }
+
+    /* Hero section */
+    .hero-section {
+        padding: 1.5rem 0.75rem;
+        margin: 0.75rem 0;
+    }
+
+    /* Content sections */
+    .content-section {
+        padding: 1.25rem 0.75rem;
+        margin: 0.75rem 0;
+    }
+
+    .product-card {
+        padding: 1.25rem 0.75rem;
+    }
+
+    /* Forms */
+    .form-container {
+        padding: 1.25rem 0.75rem;
+    }
+
+    /* Main content */
+    main {
+        padding: 0.75rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 1.25rem 0.75rem;
+    }
+}
+
+/* Video background optimization for mobile */
+@media (max-width: 768px) {
+    #background-video {
+        /* Optimize video for mobile performance */
+        object-fit: cover;
+        /* Reduce video quality on mobile if needed */
+    }
+
+    /* Disable video on very small screens if performance is an issue */
+    @media (max-width: 320px) {
+        #background-video {
+            display: none;
+        }
+        
+        body {
+            background-image: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+        }
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    /* Improve touch targets */
+    nav ul li a,
+    .btn {
+        -webkit-tap-highlight-color: rgba(255, 0, 51, 0.3);
+        tap-highlight-color: rgba(255, 0, 51, 0.3);
+    }
+
+    /* Remove hover effects on touch devices */
+    .product-card:hover {
+        transform: none;
+    }
+
+    .btn:hover {
+        transform: none;
+    }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        padding: 1.5rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.4em;
+    }
+
+    .slogan {
+        font-size: 1.1em;
+        margin: 1rem 0;
     }
 }
 
