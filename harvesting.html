@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Harvesting Program - Neuroskin Corp</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <video autoplay muted loop playsinline preload="auto" id="background-video">
+        <source src="assets/CyberVid.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <header>
+        <div class="header-content">
+            <div class="logo-left">
+                <img src="assets/NEONpng.png" alt="NEON WORLDWIDE" class="header-logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="harvesting.html">Harvesting Program</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="logo-right">
+                <img src="assets/Neuroskinpng.png" alt="NEUROSKIN" class="header-logo">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="content-section">
+                <h1>Human Harvesting Program</h1>
+                <p class="slogan" style="font-size: 1.8em; margin: 1.5rem 0;">
+                    The brain makes for a better battery. Become a harvester, become useful.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>Program Overview</h2>
+                <p style="color: var(--text-gray); line-height: 1.8;">
+                    The Human Harvesting Program represents the pinnacle of neural processing technology. Volunteers participate 
+                    in a revolutionary program where their neural activity is harnessed to process massive amounts of data for 
+                    NEON WORLDWIDE's corporate operations.
+                </p>
+                <p style="color: var(--text-gray); line-height: 1.8; margin-top: 1rem;">
+                    Participants are provided with specialized neural interface helmets that connect directly to their brain's 
+                    neural pathways. While in a comfortable, controlled environment, volunteers' brains process complex computational 
+                    tasks that would take traditional systems years to complete.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>How It Works</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <h3>Step 1: Application</h3>
+                        <p style="color: var(--text-gray);">
+                            Submit your application through our secure system. Our recruitment team will review your profile 
+                            and neural compatibility.
+                        </p>
+                    </div>
+                    <div class="product-card">
+                        <h3>Step 2: Evaluation</h3>
+                        <p style="color: var(--text-gray);">
+                            Qualified candidates undergo comprehensive neural assessment to determine processing capacity and 
+                            compatibility with our systems.
+                        </p>
+                    </div>
+                    <div class="product-card">
+                        <h3>Step 3: Integration</h3>
+                        <p style="color: var(--text-gray);">
+                            Selected volunteers are fitted with our advanced neural interface helmets and integrated into the 
+                            processing network.
+                        </p>
+                    </div>
+                    <div class="product-card">
+                        <h3>Step 4: Contribution</h3>
+                        <p style="color: var(--text-gray);">
+                            Volunteers contribute their neural processing power while resting in comfortable facilities, 
+                            becoming an essential part of corporate operations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Benefits of Participation</h2>
+                <ul style="color: var(--text-gray); line-height: 2; list-style: none; padding-left: 0;">
+                    <li style="margin: 1rem 0;">• <strong>Purpose:</strong> Contribute to the advancement of technology and corporate efficiency</li>
+                    <li style="margin: 1rem 0;">• <strong>Comfort:</strong> State-of-the-art facilities designed for optimal comfort during processing</li>
+                    <li style="margin: 1rem 0;">• <strong>Compensation:</strong> Competitive compensation packages for qualified volunteers</li>
+                    <li style="margin: 1rem 0;">• <strong>Efficiency:</strong> Your brain processes data faster and more efficiently than traditional systems</li>
+                    <li style="margin: 1rem 0;">• <strong>Usefulness:</strong> Transform your neural activity into valuable corporate resources</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Requirements</h2>
+                <p style="color: var(--text-gray); line-height: 1.8;">
+                    Ideal candidates must be of legal age, in good health, and willing to commit to the program. 
+                    All participants undergo thorough medical and neural compatibility screening. The program is entirely 
+                    voluntary, and participants can withdraw at any time (subject to contractual terms).
+                </p>
+            </div>
+
+            <div class="form-container">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Apply to the Harvesting Program</h2>
+                <form id="harvesting-form">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact Number *</label>
+                        <input type="tel" id="contact" name="contact" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="18">
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">Why do you want to become a harvester?</label>
+                        <textarea id="reason" name="reason" rows="4" placeholder="Tell us why you want to contribute your neural processing power..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">Submit Application</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Thank You Overlay -->
+    <div id="thank-you-overlay" class="thank-you-overlay">
+        <div class="thank-you-message">
+            <h2>Thank You</h2>
+            <p>A recruiter will be in contact soon...</p>
+            <p style="color: var(--text-dark-gray); font-size: 0.9em; margin-top: 2rem;">
+                Redirecting to homepage...
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Neuroskin Corp</strong> | Powered by NEON WORLDWIDE</p>
+            <p style="color: var(--text-dark-gray); font-size: 0.9em;">
+                "The brain makes for a better battery. Become a harvester, become useful."
+            </p>
+            <p style="color: var(--text-dark-gray); font-size: 0.8em; margin-top: 1rem;">
+                © 2077 NEON WORLDWIDE. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+
+
