@@ -44,6 +44,44 @@ body {
     z-index: -2;
     pointer-events: none;
     background-color: var(--primary-bg);
+    /* Hide video controls and play button */
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Hide video controls and play button overlays */
+#background-video::-webkit-media-controls {
+    display: none !important;
+}
+
+#background-video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+#background-video::-webkit-media-controls-panel {
+    display: none !important;
+}
+
+#background-video::-webkit-media-controls-play-button {
+    display: none !important;
+}
+
+#background-video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+}
+
+#background-video::before,
+#background-video::after {
+    display: none !important;
+}
+
+/* Background Audio */
+#background-music {
+    display: none;
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
 
 /* Ensure content is above background video */

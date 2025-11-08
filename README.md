@@ -4,7 +4,8 @@ A cyberpunk dystopian-themed corporate website for Neuroskin Corp, powered by NE
 
 ## Features
 
-- **Video Background**: Dynamic video background on all pages featuring cyberpunk cityscapes
+- **Video Background**: Dynamic video background on all pages featuring cyberpunk cityscapes (autoplays on mobile)
+- **Background Music**: Ambient background music that starts muted and automatically unmutes on first user interaction
 - **Responsive Design**: Fully responsive layout that works on all devices
 - **Interactive Forms**: Contact and harvesting program application forms
 - **Neon Aesthetic**: Cyberpunk-inspired design with neon red accents and dark themes
@@ -16,8 +17,9 @@ A cyberpunk dystopian-themed corporate website for Neuroskin Corp, powered by NE
 Evil Website/
 ├── assets/
 │   ├── CyberVid.mp4           # Background video for all pages
+│   ├── MUSIC.m4a              # Background music (starts muted, unmutes on interaction)
 │   ├── NEONpng.png            # NEON WORLDWIDE logo
-│   └── Neuroskinpng.png       # NEUROSKIN logo
+│   └── NEUROSKIN.png          # NEUROSKIN logo
 ├── css/
 │   └── style.css              # Main stylesheet
 ├── js/

@@ -9,10 +9,14 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <video autoplay muted loop playsinline preload="auto" id="background-video">
+    <video autoplay muted loop playsinline webkit-playsinline preload="auto" id="background-video" disablePictureInPicture>
         <source src="assets/CyberVid.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
+    <audio id="background-music" autoplay muted loop preload="auto">
+        <source src="assets/MUSIC.m4a" type="audio/mp4">
+        Your browser does not support the audio tag.
+    </audio>
     <header>
         <div class="header-content">
             <div class="logo-left">
@@ -27,7 +31,7 @@
                 </ul>
             </nav>
             <div class="logo-right">
-                <img src="assets/Neuroskinpng.png" alt="NEUROSKIN" class="header-logo neuroskin-logo">
+                <img src="assets/NEUROSKIN.png" alt="NEUROSKIN" class="header-logo neuroskin-logo">
             </div>
         </div>
     </header>
