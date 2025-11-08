@@ -68,7 +68,9 @@ const products = {
 // Load product specs from text file
 async function loadProductSpecs(categoryFolder, specsFile) {
     try {
-        const response = await fetch(`assets/${categoryFolder}/${specsFile}`);
+        const encodedFolder = encodeURIComponent(categoryFolder);
+        const encodedFile = encodeURIComponent(specsFile);
+        const response = await fetch(`assets/${encodedFolder}/${encodedFile}`);
         if (response.ok) {
             return await response.text();
         }
@@ -105,11 +107,13 @@ async function loadProducts(categoryId) {
     for (const product of productList) {
         const specs = await loadProductSpecs(category.folder, product.specs);
         
+        const encodedFolder = encodeURIComponent(category.folder);
+        const encodedImage = encodeURIComponent(product.image);
         const productCard = document.createElement('div');
         productCard.className = 'product-item-card';
         productCard.innerHTML = `
             <div class="product-item-image">
-                <img src="assets/${category.folder}/${product.image}" alt="${product.name}" onerror="this.style.display='none'">
+                <img src="assets/${encodedFolder}/${encodedImage}" alt="${product.name}" onerror="this.style.display='none'">
             </div>
             <div class="product-item-info">
                 <h3>${product.name}</h3>
@@ -144,9 +148,11 @@ function showPurchaseForm(productName, price, image, category) {
     const telAttrs = isMobileDevice ? 'autocomplete="tel" inputmode="tel"' : '';
     const emailAttrs = isMobileDevice ? 'autocomplete="email" inputmode="email"' : '';
     
+    const encodedCategory = encodeURIComponent(category);
+    const encodedImage = encodeURIComponent(image);
     formContainer.innerHTML = `
         <div class="purchase-product-display">
-            <img src="assets/${category}/${image}" alt="${productName}" onerror="this.style.display='none'">
+            <img src="assets/${encodedCategory}/${encodedImage}" alt="${productName}" onerror="this.style.display='none'">
             <h3>${productName}</h3>
             <div class="product-price">${formatPrice(parseFloat(price))}</div>
         </div>
