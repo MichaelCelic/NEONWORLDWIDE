@@ -90,11 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Audio Background Handling with Auto-Unmute (Persistent across pages)
     const backgroundMusic = document.getElementById('background-music');
     let audioUnmuted = false;
+    let shouldBePlaying = false; // Track if audio should be playing
     
     if (backgroundMusic) {
         // Check if audio was already playing from previous page
         const savedAudioTime = sessionStorage.getItem('audioCurrentTime');
         const savedUnmutedState = sessionStorage.getItem('audioUnmuted') === 'true';
+        const savedPlayingState = sessionStorage.getItem('audioPlaying') === 'true';
         
         // Restore unmuted state if it was already unmuted
         if (savedUnmutedState) {
@@ -103,6 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Ensure audio is muted initially if not already unmuted
             backgroundMusic.muted = true;
+        }
+        
+        // Set shouldBePlaying flag if audio was playing before
+        if (savedPlayingState) {
+            shouldBePlaying = true;
         }
         
         // Wait for audio to be ready before restoring time position
@@ -118,45 +125,122 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Try to start playing audio
         const playAudio = function() {
-            const audioPromise = backgroundMusic.play();
-            if (audioPromise !== undefined) {
-                audioPromise.catch(function(error) {
-                    console.log('Audio play error:', error);
-                });
+            if (backgroundMusic.paused) {
+                const audioPromise = backgroundMusic.play();
+                if (audioPromise !== undefined) {
+                    audioPromise.then(function() {
+                        shouldBePlaying = true;
+                        sessionStorage.setItem('audioPlaying', 'true');
+                    }).catch(function(error) {
+                        console.log('Audio play error:', error);
+                        // Don't set shouldBePlaying if play failed
+                    });
+                }
             }
         };
         
         // Start playing audio (will continue from saved time if available)
         // Wait for metadata to load if needed
+        const initializeAudio = function() {
+            restoreAudioState();
+            if (shouldBePlaying) {
+                // Small delay to ensure page is fully loaded (helps on mobile)
+                setTimeout(function() {
+                    playAudio();
+                }, 100);
+            }
+        };
+        
         if (backgroundMusic.readyState >= 2) {
             // Audio metadata already loaded
-            restoreAudioState();
-            playAudio();
+            initializeAudio();
         } else {
             // Wait for metadata to load, then restore state and play
             backgroundMusic.addEventListener('loadedmetadata', function() {
-                restoreAudioState();
-                playAudio();
+                initializeAudio();
             }, { once: true });
-            // Also try to play immediately in case metadata loads quickly
-            playAudio();
+            // Also try to initialize immediately if metadata loads quickly
+            backgroundMusic.addEventListener('canplay', function() {
+                if (shouldBePlaying && backgroundMusic.paused) {
+                    initializeAudio();
+                }
+            }, { once: true });
         }
         
         // Save audio time periodically to sessionStorage
         const saveAudioTime = function() {
             if (backgroundMusic && !backgroundMusic.paused) {
                 sessionStorage.setItem('audioCurrentTime', backgroundMusic.currentTime.toString());
+                sessionStorage.setItem('audioPlaying', 'true');
+            } else {
+                sessionStorage.setItem('audioPlaying', 'false');
             }
         };
         
         // Save audio time every second
         setInterval(saveAudioTime, 1000);
         
-        // Save audio time before page unload
-        window.addEventListener('beforeunload', function() {
-            if (backgroundMusic && !backgroundMusic.paused) {
+        // Save audio state on pagehide (more reliable on mobile than beforeunload)
+        window.addEventListener('pagehide', function() {
+            if (backgroundMusic) {
                 sessionStorage.setItem('audioCurrentTime', backgroundMusic.currentTime.toString());
                 sessionStorage.setItem('audioUnmuted', audioUnmuted.toString());
+                sessionStorage.setItem('audioPlaying', (!backgroundMusic.paused).toString());
+            }
+        });
+        
+        // Restore audio state on pageshow (when page becomes visible again on mobile)
+        window.addEventListener('pageshow', function(event) {
+            // For both persisted (back/forward) and regular navigation, restore audio if it should be playing
+            const savedTime = sessionStorage.getItem('audioCurrentTime');
+            const wasPlaying = sessionStorage.getItem('audioPlaying') === 'true';
+            const wasUnmuted = sessionStorage.getItem('audioUnmuted') === 'true';
+            
+            if (wasPlaying && savedTime !== null) {
+                shouldBePlaying = true;
+                const targetTime = parseFloat(savedTime);
+                
+                // Restore unmuted state if it was unmuted
+                if (wasUnmuted) {
+                    backgroundMusic.muted = false;
+                    audioUnmuted = true;
+                }
+                
+                // Wait for audio to be ready
+                const restoreAndPlay = function() {
+                    if (backgroundMusic.duration && !isNaN(targetTime) && targetTime < backgroundMusic.duration) {
+                        backgroundMusic.currentTime = targetTime;
+                    }
+                    setTimeout(function() {
+                        playAudio();
+                    }, 100);
+                };
+                
+                if (backgroundMusic.readyState >= 2) {
+                    restoreAndPlay();
+                } else {
+                    backgroundMusic.addEventListener('loadedmetadata', function() {
+                        restoreAndPlay();
+                    }, { once: true });
+                    backgroundMusic.addEventListener('canplay', function() {
+                        if (backgroundMusic.paused) {
+                            restoreAndPlay();
+                        }
+                    }, { once: true });
+                }
+            }
+        });
+        
+        // Handle visibility change (for mobile browsers)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Page is hidden - save state but don't pause (let it continue)
+                saveAudioTime();
+            } else {
+                // Page is visible again - resume if it should be playing
+                if (shouldBePlaying && backgroundMusic.paused) {
+                    playAudio();
+                }
             }
         });
         
@@ -166,9 +250,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     backgroundMusic.muted = false;
                     audioUnmuted = true;
+                    shouldBePlaying = true;
                     
                     // Save unmuted state to sessionStorage
                     sessionStorage.setItem('audioUnmuted', 'true');
+                    sessionStorage.setItem('audioPlaying', 'true');
                     
                     // Ensure audio is playing
                     if (backgroundMusic.paused) {
@@ -206,7 +292,28 @@ document.addEventListener('DOMContentLoaded', function() {
         backgroundMusic.addEventListener('timeupdate', function() {
             if (!backgroundMusic.paused) {
                 sessionStorage.setItem('audioCurrentTime', backgroundMusic.currentTime.toString());
+                sessionStorage.setItem('audioPlaying', 'true');
             }
+        });
+        
+        // Track when audio pauses (for mobile browsers that pause on navigation)
+        backgroundMusic.addEventListener('pause', function() {
+            // Only update if we didn't intentionally pause
+            if (shouldBePlaying) {
+                // Audio was paused unexpectedly (e.g., by mobile browser)
+                // Try to resume after a short delay
+                setTimeout(function() {
+                    if (shouldBePlaying && backgroundMusic.paused && !document.hidden) {
+                        playAudio();
+                    }
+                }, 100);
+            }
+        });
+        
+        // Track when audio starts playing
+        backgroundMusic.addEventListener('play', function() {
+            shouldBePlaying = true;
+            sessionStorage.setItem('audioPlaying', 'true');
         });
     }
     
