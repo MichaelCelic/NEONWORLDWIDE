@@ -1,0 +1,48 @@
+Technical Specifications
+
+Manufacturer: NeuroSkin
+Model Code: CL-58-NSW
+Generation: 11th-Gen Adaptive Stealth Mobility Platform
+
+Core Features
+
+Chassis Composition: Adaptive obsidian-infused cerametal shell layered over micro-flex polymer; low-glint matte finish with reactive surface microtexturing for reduced radar/optical signature
+
+Skeletal Framework: Nano-filament ferroframe with tensioned lattice ligaments (Graphene weave reinforcement) for torsional damping and micro-vibration isolation
+
+Power System: Dual micro-fusion cell array with backup ultracapacitor ring and regenerative piezoelectric harvesters embedded in foot pads
+
+Hydraulic Architecture: Bio-tuned magneto-hydraulic microactuators with four-zone pressure modulation allowing smooth microadjustments and high torque bursts (burst modulation for sprint/impact phases)
+
+Neural Interface: NeuroSkin SynapseLink v7.7 — layered Q-mesh interface with adaptive impedance matching and biometric neural fingerprinting; supports optional direct NIS backbone integration
+
+Cooling System: Phase-change microcell coolant network with self-purging vent valves and heat sink microfins hidden beneath outer panels
+
+Combat Shielding: Multi-strata EMP dampening foil, plasma-resistant varnish, and surge isolation nodes; passive thermal masking layer for IR profile reduction
+
+Tactile / Haptics: Multi-zone haptic nodes and tactile feedback array along shin and foot to deliver refined proprioceptive signals and ground texture sensing
+
+Maintenance Access: Magnetic quick-release hatch panels with self-diagnostic port and encrypted firmware USB/optical console (service mode requires dual-factor NeuroSkin auth)
+
+Performance Metrics
+
+Parameter	Specification
+Strength Output	8.9× human baseline (sustained), 24× burst (Overdrive)
+Response Latency	0.0019 ms (neural loop — low-latency mode)
+Structural Endurance	99.989% integrity after 350 kinetic impacts (MIL-sim stress test)
+Power Autonomy	198 operational hours (normal) / 3.2 hours (continuous Overdrive)
+Precision Index	0.000028 variance in micro-actuator positioning
+
+Integration Notes
+
+• Designed for covert ops, recon units, and urban operators requiring a balance of stealth and mobility.
+• Full-body sync available when paired with NeuroSkin “Warden Spine” or SynapseLink backbones; reduced latency and shared power pooling when linked.
+• Adaptive gait matrix reconfigures actuator timing to match surface type (asphalt, concrete, rubble, water-slick), improving stability and reducing trip events.
+• “Shadowstride” protocol engages dynamic micro-dampening and heat-masking — reduces audible mechanical profile and IR signature for up to 9 minutes per activation (cooldown enforced).
+• Firmware includes tamper-resistant NeuralSeal v3 and per-user biometric lock; authorized upgrades only via NeuroSkin certified terminals.
+• Environmental rating: IP68 salt/ dust ingress protection; certified for −30°C to +65°C operational range.
+
+Restrictions & Warnings
+
+• Overdrive/Shadowstride extended use increases thermal stress on microcells and shortens expected cycle life; operator advisories and auto-limiter will engage under unsafe conditions.
+• NeuroSkin single-user imprint prevents unauthorized pairing; forced overrides require factory clearance and full biometric re-enrollment.

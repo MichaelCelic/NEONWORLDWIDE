@@ -1,0 +1,40 @@
+Technical Specifications
+
+Manufacturer: NeuroSkin Technologies – Dominion Warfare Division
+Model Code: CL-32-OR
+Generation: 12th-Gen Heavy-Duty Tactical Augmentation Platform
+
+Core Features
+
+Chassis Composition: Obsidium-T composite plating reinforced with layered nano-titanium shell and reactive armor microfibers
+
+Skeletal Framework: Ferrocarbon bone lattice fused with diamond-synth ligaments for unmatched tensile strength
+
+Power System: Trinary-core fusion microreactor with autonomous kinetic regeneration unit
+
+Hydraulic Architecture: Dual-stage magneto-fluidic system allowing instantaneous torque adjustment up to 7.8 tons of pressure per limb
+
+Neural Interface: Quantum Synapse Relay v9.4 — integrated with NIS-209 “Erebus Prime” and next-gen Q-cortex neural mesh
+
+Cooling System: Cryo-phase subdermal coolant channels with thermal discharge vents along triceps ridge
+
+Combat Shielding: EMP-resistant circuitry coated with plasma-reactive insulation, hardened against ion interference
+
+Performance Metrics
+Parameter	Specification
+Strength Output	9.7x human baseline
+Response Latency	0.0018 ms
+Structural Endurance	99.994% integrity after 400 kinetic impacts
+Power Autonomy	276 operational hours per fusion cycle
+Precision Index	0.00003 variance in targeting calibration
+Integration Notes
+
+Classified military-grade augmentation reserved for Tier-0 operatives and black-ops contractors
+
+Full-body synchronization possible when paired with NeuroSkin “Helios Spine” or “Erebus Prime” neural systems
+
+Adaptive muscle fibers reconfigure density based on user’s combat stance or load-bearing profile
+
+Overdrive protocol (“Reign Mode”) enables temporary quadruple torque output for 14 seconds, with bio-risk warnings suppressed
+
+Proprietary “Neural Blackseal” firmware prevents external tampering and enforces single-user neural imprint

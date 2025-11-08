@@ -92,11 +92,113 @@ document.addEventListener('DOMContentLoaded', function() {
     let audioUnmuted = false;
     let shouldBePlaying = false; // Track if audio should be playing
     
+    // Mobile detection
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+    
+    // IndexedDB for more reliable state persistence (especially on mobile)
+    const DB_NAME = 'neuroskin_audio_db';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'audio_state';
+    let db = null;
+    
+    // Initialize IndexedDB
+    const initDB = function() {
+        return new Promise(function(resolve, reject) {
+            if (!window.indexedDB) {
+                // Fallback to sessionStorage if IndexedDB not available
+                resolve(null);
+                return;
+            }
+            
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            
+            request.onerror = function() {
+                console.log('IndexedDB error, falling back to sessionStorage');
+                resolve(null);
+            };
+            
+            request.onsuccess = function() {
+                db = request.result;
+                resolve(db);
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    db.createObjectStore(STORE_NAME);
+                }
+            };
+        });
+    };
+    
+    // Save audio state to IndexedDB or sessionStorage
+    const saveAudioState = function() {
+        const state = {
+            currentTime: backgroundMusic.currentTime,
+            unmuted: audioUnmuted,
+            playing: !backgroundMusic.paused
+        };
+        
+        if (db) {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            store.put(state, 'audio');
+        } else {
+            // Fallback to sessionStorage
+            sessionStorage.setItem('audioCurrentTime', state.currentTime.toString());
+            sessionStorage.setItem('audioUnmuted', state.unmuted.toString());
+            sessionStorage.setItem('audioPlaying', state.playing.toString());
+        }
+    };
+    
+    // Load audio state from IndexedDB or sessionStorage
+    const loadAudioState = function(callback) {
+        if (db) {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get('audio');
+            
+            request.onsuccess = function() {
+                const state = request.result;
+                if (state) {
+                    callback(state);
+                } else {
+                    // Fallback to sessionStorage
+                    callback({
+                        currentTime: sessionStorage.getItem('audioCurrentTime'),
+                        unmuted: sessionStorage.getItem('audioUnmuted') === 'true',
+                        playing: sessionStorage.getItem('audioPlaying') === 'true'
+                    });
+                }
+            };
+            
+            request.onerror = function() {
+                // Fallback to sessionStorage
+                callback({
+                    currentTime: sessionStorage.getItem('audioCurrentTime'),
+                    unmuted: sessionStorage.getItem('audioUnmuted') === 'true',
+                    playing: sessionStorage.getItem('audioPlaying') === 'true'
+                });
+            };
+        } else {
+            // Use sessionStorage
+            callback({
+                currentTime: sessionStorage.getItem('audioCurrentTime'),
+                unmuted: sessionStorage.getItem('audioUnmuted') === 'true',
+                playing: sessionStorage.getItem('audioPlaying') === 'true'
+            });
+        }
+    };
+    
     if (backgroundMusic) {
-        // Check if audio was already playing from previous page
-        const savedAudioTime = sessionStorage.getItem('audioCurrentTime');
-        const savedUnmutedState = sessionStorage.getItem('audioUnmuted') === 'true';
-        const savedPlayingState = sessionStorage.getItem('audioPlaying') === 'true';
+        // Initialize IndexedDB first
+        initDB().then(function() {
+            // Load saved state
+            loadAudioState(function(savedState) {
+                const savedAudioTime = savedState.currentTime;
+                const savedUnmutedState = savedState.unmuted;
+                const savedPlayingState = savedState.playing;
         
         // Restore unmuted state if it was already unmuted
         if (savedUnmutedState) {
@@ -123,197 +225,236 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
         
-        // Try to start playing audio
-        const playAudio = function() {
-            if (backgroundMusic.paused) {
-                const audioPromise = backgroundMusic.play();
-                if (audioPromise !== undefined) {
-                    audioPromise.then(function() {
-                        shouldBePlaying = true;
-                        sessionStorage.setItem('audioPlaying', 'true');
-                    }).catch(function(error) {
-                        console.log('Audio play error:', error);
-                        // Don't set shouldBePlaying if play failed
-                    });
-                }
-            }
-        };
-        
-        // Start playing audio (will continue from saved time if available)
-        // Wait for metadata to load if needed
-        const initializeAudio = function() {
-            restoreAudioState();
-            if (shouldBePlaying) {
-                // Small delay to ensure page is fully loaded (helps on mobile)
-                setTimeout(function() {
-                    playAudio();
-                }, 100);
-            }
-        };
-        
-        if (backgroundMusic.readyState >= 2) {
-            // Audio metadata already loaded
-            initializeAudio();
-        } else {
-            // Wait for metadata to load, then restore state and play
-            backgroundMusic.addEventListener('loadedmetadata', function() {
-                initializeAudio();
-            }, { once: true });
-            // Also try to initialize immediately if metadata loads quickly
-            backgroundMusic.addEventListener('canplay', function() {
-                if (shouldBePlaying && backgroundMusic.paused) {
-                    initializeAudio();
-                }
-            }, { once: true });
-        }
-        
-        // Save audio time periodically to sessionStorage
-        const saveAudioTime = function() {
-            if (backgroundMusic && !backgroundMusic.paused) {
-                sessionStorage.setItem('audioCurrentTime', backgroundMusic.currentTime.toString());
-                sessionStorage.setItem('audioPlaying', 'true');
-            } else {
-                sessionStorage.setItem('audioPlaying', 'false');
-            }
-        };
-        
-        // Save audio time every second
-        setInterval(saveAudioTime, 1000);
-        
-        // Save audio state on pagehide (more reliable on mobile than beforeunload)
-        window.addEventListener('pagehide', function() {
-            if (backgroundMusic) {
-                sessionStorage.setItem('audioCurrentTime', backgroundMusic.currentTime.toString());
-                sessionStorage.setItem('audioUnmuted', audioUnmuted.toString());
-                sessionStorage.setItem('audioPlaying', (!backgroundMusic.paused).toString());
-            }
-        });
-        
-        // Restore audio state on pageshow (when page becomes visible again on mobile)
-        window.addEventListener('pageshow', function(event) {
-            // For both persisted (back/forward) and regular navigation, restore audio if it should be playing
-            const savedTime = sessionStorage.getItem('audioCurrentTime');
-            const wasPlaying = sessionStorage.getItem('audioPlaying') === 'true';
-            const wasUnmuted = sessionStorage.getItem('audioUnmuted') === 'true';
-            
-            if (wasPlaying && savedTime !== null) {
-                shouldBePlaying = true;
-                const targetTime = parseFloat(savedTime);
-                
-                // Restore unmuted state if it was unmuted
-                if (wasUnmuted) {
-                    backgroundMusic.muted = false;
-                    audioUnmuted = true;
-                }
-                
-                // Wait for audio to be ready
-                const restoreAndPlay = function() {
-                    if (backgroundMusic.duration && !isNaN(targetTime) && targetTime < backgroundMusic.duration) {
-                        backgroundMusic.currentTime = targetTime;
+                // Try to start playing audio
+                const playAudio = function() {
+                    if (backgroundMusic.paused) {
+                        const audioPromise = backgroundMusic.play();
+                        if (audioPromise !== undefined) {
+                            audioPromise.then(function() {
+                                shouldBePlaying = true;
+                                saveAudioState();
+                            }).catch(function(error) {
+                                console.log('Audio play error:', error);
+                                // Don't set shouldBePlaying if play failed
+                            });
+                        }
                     }
-                    setTimeout(function() {
-                        playAudio();
-                    }, 100);
+                };
+                
+                // Mobile fallback: restart audio from beginning on each page
+                if (isMobile && !savedPlayingState) {
+                    // On mobile, if audio wasn't playing before, start fresh
+                    shouldBePlaying = false;
+                    savedAudioTime = null;
+                }
+                
+                // Start playing audio (will continue from saved time if available)
+                // Wait for metadata to load if needed
+                const initializeAudio = function() {
+                    if (!isMobile || savedPlayingState) {
+                        // PC or mobile with saved state - restore position
+                        restoreAudioState();
+                    } else {
+                        // Mobile without saved state - start from beginning
+                        backgroundMusic.currentTime = 0;
+                    }
+                    
+                    if (shouldBePlaying || (!isMobile && savedPlayingState)) {
+                        // Small delay to ensure page is fully loaded (helps on mobile)
+                        setTimeout(function() {
+                            playAudio();
+                        }, 100);
+                    }
                 };
                 
                 if (backgroundMusic.readyState >= 2) {
-                    restoreAndPlay();
+                    // Audio metadata already loaded
+                    initializeAudio();
                 } else {
+                    // Wait for metadata to load, then restore state and play
                     backgroundMusic.addEventListener('loadedmetadata', function() {
-                        restoreAndPlay();
+                        initializeAudio();
                     }, { once: true });
+                    // Also try to initialize immediately if metadata loads quickly
                     backgroundMusic.addEventListener('canplay', function() {
-                        if (backgroundMusic.paused) {
-                            restoreAndPlay();
+                        if ((shouldBePlaying || (!isMobile && savedPlayingState)) && backgroundMusic.paused) {
+                            initializeAudio();
                         }
                     }, { once: true });
                 }
-            }
-        });
+                
+                // Save audio state periodically (more aggressive on mobile)
+                const saveInterval = isMobile ? 500 : 1000; // Save every 500ms on mobile, 1s on PC
+                setInterval(function() {
+                    if (backgroundMusic && !backgroundMusic.paused) {
+                        saveAudioState();
+                    }
+                }, saveInterval);
+                
+                // Aggressive state saving on multiple events (especially for mobile)
+                const saveStateImmediately = function() {
+                    if (backgroundMusic) {
+                        saveAudioState();
+                    }
+                };
+                
+                // Save state on multiple events for maximum reliability
+                window.addEventListener('pagehide', saveStateImmediately);
+                window.addEventListener('beforeunload', saveStateImmediately);
+                window.addEventListener('unload', saveStateImmediately);
+                window.addEventListener('blur', saveStateImmediately);
+                document.addEventListener('visibilitychange', function() {
+                    if (document.hidden) {
+                        saveStateImmediately();
+                    }
+                });
         
-        // Handle visibility change (for mobile browsers)
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                // Page is hidden - save state but don't pause (let it continue)
-                saveAudioTime();
-            } else {
-                // Page is visible again - resume if it should be playing
-                if (shouldBePlaying && backgroundMusic.paused) {
-                    playAudio();
+                // Restore audio state on pageshow (when page becomes visible again on mobile)
+                window.addEventListener('pageshow', function(event) {
+                    // Load state from IndexedDB/sessionStorage
+                    loadAudioState(function(savedState) {
+                        const savedTime = savedState.currentTime;
+                        const wasPlaying = savedState.playing;
+                        const wasUnmuted = savedState.unmuted;
+                        
+                        if (wasPlaying && savedTime !== null) {
+                            shouldBePlaying = true;
+                            const targetTime = parseFloat(savedTime);
+                            
+                            // Restore unmuted state if it was unmuted
+                            if (wasUnmuted) {
+                                backgroundMusic.muted = false;
+                                audioUnmuted = true;
+                            }
+                            
+                            // Wait for audio to be ready
+                            const restoreAndPlay = function() {
+                                if (!isMobile || wasPlaying) {
+                                    // PC or mobile with saved state - restore position
+                                    if (backgroundMusic.duration && !isNaN(targetTime) && targetTime < backgroundMusic.duration) {
+                                        backgroundMusic.currentTime = targetTime;
+                                    }
+                                } else {
+                                    // Mobile without saved state - start from beginning
+                                    backgroundMusic.currentTime = 0;
+                                }
+                                setTimeout(function() {
+                                    playAudio();
+                                }, 100);
+                            };
+                            
+                            if (backgroundMusic.readyState >= 2) {
+                                restoreAndPlay();
+                            } else {
+                                backgroundMusic.addEventListener('loadedmetadata', function() {
+                                    restoreAndPlay();
+                                }, { once: true });
+                                backgroundMusic.addEventListener('canplay', function() {
+                                    if (backgroundMusic.paused) {
+                                        restoreAndPlay();
+                                    }
+                                }, { once: true });
+                            }
+                        }
+                    });
+                });
+        
+                // Handle visibility change (for mobile browsers)
+                document.addEventListener('visibilitychange', function() {
+                    if (document.hidden) {
+                        // Page is hidden - save state immediately
+                        saveStateImmediately();
+                    } else {
+                        // Page is visible again - resume if it should be playing
+                        if (shouldBePlaying && backgroundMusic.paused) {
+                            playAudio();
+                        }
+                    }
+                });
+                
+                // Function to unmute audio on first user interaction
+                const unmuteAudioOnInteraction = function() {
+                    if (!audioUnmuted && backgroundMusic) {
+                        try {
+                            backgroundMusic.muted = false;
+                            audioUnmuted = true;
+                            shouldBePlaying = true;
+                            
+                            // Save unmuted state
+                            saveAudioState();
+                            
+                            // Ensure audio is playing
+                            if (backgroundMusic.paused) {
+                                playAudio();
+                            }
+                        } catch (error) {
+                            console.log('Audio unmute error:', error);
+                        }
+                    }
+                };
+                
+                // Only listen for unmute if audio hasn't been unmuted yet
+                if (!audioUnmuted) {
+                    // Listen for first user interaction to unmute audio
+                    document.addEventListener('click', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('touchstart', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('scroll', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('mousemove', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('touchend', unmuteAudioOnInteraction, { once: true, passive: true });
                 }
-            }
-        });
+                
+                // Handle audio errors
+                backgroundMusic.addEventListener('error', function(e) {
+                    console.log('Audio loading error:', e);
+                });
         
-        // Function to unmute audio on first user interaction
-        const unmuteAudioOnInteraction = function() {
-            if (!audioUnmuted && backgroundMusic) {
-                try {
-                    backgroundMusic.muted = false;
-                    audioUnmuted = true;
+                // Ensure audio loops properly
+                backgroundMusic.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                    saveAudioState();
+                });
+                
+                // Update saved time when audio time updates (for seeking)
+                backgroundMusic.addEventListener('timeupdate', function() {
+                    if (!backgroundMusic.paused) {
+                        // Save state more frequently on mobile
+                        if (isMobile) {
+                            // Save every 500ms on mobile
+                            if (Math.floor(this.currentTime * 2) % 1 === 0) {
+                                saveAudioState();
+                            }
+                        } else {
+                            // Save every second on PC
+                            if (Math.floor(this.currentTime) % 1 === 0) {
+                                saveAudioState();
+                            }
+                        }
+                    }
+                });
+                
+                // Track when audio pauses (for mobile browsers that pause on navigation)
+                backgroundMusic.addEventListener('pause', function() {
+                    // Only update if we didn't intentionally pause
+                    if (shouldBePlaying) {
+                        // Audio was paused unexpectedly (e.g., by mobile browser)
+                        // Save state immediately
+                        saveStateImmediately();
+                        // Try to resume after a short delay
+                        setTimeout(function() {
+                            if (shouldBePlaying && backgroundMusic.paused && !document.hidden) {
+                                playAudio();
+                            }
+                        }, 100);
+                    }
+                });
+                
+                // Track when audio starts playing
+                backgroundMusic.addEventListener('play', function() {
                     shouldBePlaying = true;
-                    
-                    // Save unmuted state to sessionStorage
-                    sessionStorage.setItem('audioUnmuted', 'true');
-                    sessionStorage.setItem('audioPlaying', 'true');
-                    
-                    // Ensure audio is playing
-                    if (backgroundMusic.paused) {
-                        playAudio();
-                    }
-                } catch (error) {
-                    console.log('Audio unmute error:', error);
-                }
-            }
-        };
-        
-        // Only listen for unmute if audio hasn't been unmuted yet
-        if (!audioUnmuted) {
-            // Listen for first user interaction to unmute audio
-            document.addEventListener('click', unmuteAudioOnInteraction, { once: true, passive: true });
-            document.addEventListener('touchstart', unmuteAudioOnInteraction, { once: true, passive: true });
-            document.addEventListener('scroll', unmuteAudioOnInteraction, { once: true, passive: true });
-            document.addEventListener('mousemove', unmuteAudioOnInteraction, { once: true, passive: true });
-            document.addEventListener('touchend', unmuteAudioOnInteraction, { once: true, passive: true });
-        }
-        
-        // Handle audio errors
-        backgroundMusic.addEventListener('error', function(e) {
-            console.log('Audio loading error:', e);
-        });
-        
-        // Ensure audio loops properly
-        backgroundMusic.addEventListener('ended', function() {
-            this.currentTime = 0;
-            this.play();
-            sessionStorage.setItem('audioCurrentTime', '0');
-        });
-        
-        // Update saved time when audio time updates (for seeking)
-        backgroundMusic.addEventListener('timeupdate', function() {
-            if (!backgroundMusic.paused) {
-                sessionStorage.setItem('audioCurrentTime', backgroundMusic.currentTime.toString());
-                sessionStorage.setItem('audioPlaying', 'true');
-            }
-        });
-        
-        // Track when audio pauses (for mobile browsers that pause on navigation)
-        backgroundMusic.addEventListener('pause', function() {
-            // Only update if we didn't intentionally pause
-            if (shouldBePlaying) {
-                // Audio was paused unexpectedly (e.g., by mobile browser)
-                // Try to resume after a short delay
-                setTimeout(function() {
-                    if (shouldBePlaying && backgroundMusic.paused && !document.hidden) {
-                        playAudio();
-                    }
-                }, 100);
-            }
-        });
-        
-        // Track when audio starts playing
-        backgroundMusic.addEventListener('play', function() {
-            shouldBePlaying = true;
-            sessionStorage.setItem('audioPlaying', 'true');
+                    saveAudioState();
+                });
+            });
         });
     }
     

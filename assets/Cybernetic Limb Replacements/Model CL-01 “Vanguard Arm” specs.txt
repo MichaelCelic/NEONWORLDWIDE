@@ -1,0 +1,41 @@
+Technical Specifications
+
+Manufacturer: NeuroSkin Technologies – Applied Biomechanics Division
+Model Code: CL-01-VA
+Generation: 3rd-Gen Reinforced Augmentation Framework
+
+Core Features
+
+Material Composition: High-density carbon-titanium hybrid alloy with synthetic muscle fibers
+
+Power Source: Dual-core microfusion reactor with 72-hour charge cycle
+
+Hydraulic System: Magneto-hydraulic servo system with instantaneous torque response
+
+Load Capacity: 1,200 kg lift rating under sustained strain
+
+Neural Interface: Direct cortex uplink through NeuroSkin’s NIS integration standard
+
+Cooling Mechanism: Subdermal micro-vent array with adaptive thermoregulation
+
+Armor Rating: Class-IV impact resistance with reactive plating mesh
+
+Haptic Feedback: 48,000 tactile sensors providing near-organic sensitivity
+
+Performance Metrics
+Parameter	Specification
+Reaction Time	0.006 seconds (neural impulse to motion)
+Grip Strength	5.2x baseline human limit
+Flex Endurance	3.1 million motion cycles
+Durability Index	97.8% after simulated combat conditions
+Integration Notes
+
+Compatible with all NeuroSkin Neural Interface Systems (NIS-77 and above)
+
+Integrated combat-mode safety lock to prevent synaptic overload
+
+Self-calibrating servos allow full reattachment and alignment in under 10 minutes
+
+Optional Overdrive Module available for military or industrial-grade use
+
+Includes concealed tool bay for modular weapon or utility attachments

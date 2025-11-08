@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Neural Interface Systems - Neuroskin Corp</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <video autoplay muted loop playsinline webkit-playsinline preload="auto" id="background-video" disablePictureInPicture>
+        <source src="assets/CyberVid.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <audio id="background-music" autoplay muted loop preload="auto">
+        <source src="assets/MUSIC.m4a" type="audio/mp4">
+        Your browser does not support the audio tag.
+    </audio>
+    <header>
+        <div class="header-content">
+            <div class="logo-left">
+                <img src="assets/NEONpng.png" alt="NEON WORLDWIDE" class="header-logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="harvesting.html">Harvesting Program</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="logo-right">
+                <img src="assets/NEUROSKIN.png" alt="NEUROSKIN" class="header-logo neuroskin-logo">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="content-section">
+                <h1>Neural Interface Systems</h1>
+                <p style="color: var(--text-gray); font-size: 1.1em; margin-top: 1rem;">
+                    Advanced neural interfaces that allow direct communication between the human brain and digital systems. 
+                    Experience seamless data transfer and enhanced cognitive processing capabilities.
+                </p>
+            </div>
+
+            <div id="products-container" class="products-grid">
+                <!-- Products will be loaded dynamically here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Purchase Form Overlay -->
+    <div id="purchase-form-overlay" class="purchase-overlay">
+        <div class="purchase-form-container">
+            <button class="close-btn" onclick="closePurchaseForm()">&times;</button>
+            <div id="purchase-form-container">
+                <!-- Purchase form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchase Success Overlay -->
+    <div id="purchase-success-overlay" class="thank-you-overlay">
+        <div class="thank-you-message">
+            <h2>A Licensed Ripperdoc Will Be In Contact Shortly</h2>
+            <p style="color: var(--text-dark-gray); font-size: 0.9em; margin-top: 2rem;">
+                Redirecting to products page...
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Neuroskin Corp</strong> | Powered by NEON WORLDWIDE</p>
+            <p style="color: var(--text-dark-gray); font-size: 0.9em;">
+                "The brain makes for a better battery. Become a harvester, become useful."
+            </p>
+            <p style="color: var(--text-dark-gray); font-size: 0.8em; margin-top: 1rem;">
+                © 2077 NEON WORLDWIDE. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
+
