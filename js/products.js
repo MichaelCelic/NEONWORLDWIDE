@@ -31,37 +31,37 @@ const productCategories = {
 // Product data structure
 const products = {
     'neural-interface-systems': [
-        { name: 'Model NIS-103 "AetherCore"', image: 'Model NIS-103 "AetherCore".png', specs: 'Model NIS-103 "AetherCore" specs.txt', price: 125000 },
-        { name: 'Model NIS-128 "HaloSyn"', image: 'Model NIS-128 "HaloSyn".png', specs: 'Model NIS-128 "HaloSyn" specs.txt', price: 145000 },
-        { name: 'Model NIS-209 "Erebus Prime"', image: 'Model NIS-209 "Erebus Prime".png', specs: 'Model NIS-209 "Erebus Prime" specs.txt', price: 185000 },
-        { name: 'Model NIS-77 "CortexLink"', image: 'Model NIS-77 "CortexLink".png', specs: 'Model NIS-77 "CortexLink" specs.txt', price: 95000 },
-        { name: 'Model NIS-91 "Synapse Forge"', image: 'Model NIS-91 "Synapse Forge".png', specs: 'Model NIS-91 "Synapse Forge" specs.txt', price: 115000 }
+        { name: 'Model NIS-103 "AetherCore"', image: 'Model NIS-103 “AetherCore”.png', specs: 'Model NIS-103 "AetherCore" specs.txt', price: 125000 },
+        { name: 'Model NIS-128 "HaloSyn"', image: 'Model NIS-128 “HaloSyn”.png', specs: 'Model NIS-128 "HaloSyn" specs.txt', price: 145000 },
+        { name: 'Model NIS-209 "Erebus Prime"', image: 'Model NIS-209 “Erebus Prime”.png', specs: 'Model NIS-209 "Erebus Prime" specs.txt', price: 185000 },
+        { name: 'Model NIS-77 "CortexLink"', image: 'Model NIS-77 “CortexLink”.png', specs: 'Model NIS-77 "CortexLink" specs.txt', price: 95000 },
+        { name: 'Model NIS-91 "Synapse Forge"', image: 'Model NIS-91 “Synapse Forge”.png', specs: 'Model NIS-91 "Synapse Forge" specs.txt', price: 115000 }
     ],
     'cybernetic-limb-replacements': [
-        { name: 'Model CL-01 "Vanguard Arm"', image: 'Model CL-01 "Vanguard Arm".png', specs: 'Model CL-01 "Vanguard Arm" specs.txt', price: 75000 },
-        { name: 'Model CL-09 "Ethereal Arm"', image: 'Model CL-09 "Ethereal Arm".png', specs: 'Model CL-09 "Ethereal Arm" specs.txt', price: 85000 },
-        { name: 'Model CL-12 "Aegis Arm"', image: 'Model CL-12 "Aegis Arm".png', specs: 'Model CL-12 "Aegis Arm" specs.txt', price: 95000 },
-        { name: 'Model CL-17 "Seraph Arm"', image: 'Model CL-17 "Seraph Arm".png', specs: 'Model CL-17 "Seraph Arm" specs.txt', price: 105000 },
-        { name: 'Model CL-21 "Specter Arm"', image: 'Model CL-21 "Specter Arm".png', specs: 'Model CL-21 "Specter Arm" specs.txt', price: 115000 },
-        { name: 'Model CL-32 "Obsidian Reign"', image: 'Model CL-32 "Obsidian Reign".png', specs: 'Model CL-32 "Obsidian Reign" specs.txt', price: 135000 },
-        { name: 'Model CL-47 "Iron Dominion"', image: 'Model CL-47 "Iron Dominion".png', specs: 'Model CL-47 "Iron Dominion" specs.txt', price: 155000 },
-        { name: 'Model CL-58 "Nightshade Warden"', image: 'Model CL-58 "Nightshade Warden".png', specs: 'Model CL-58 "Nightshade Warden" specs.txt', price: 175000 },
-        { name: 'Model CL-62 "Eidolon Veil"', image: 'Model CL-62 "Eidolon Veil".png', specs: 'Model CL-62 "Eidolon Veil" specs.txt', price: 195000 }
+        { name: 'Model CL-01 "Vanguard Arm"', image: 'Model CL-01 “Vanguard Arm”.png', specs: 'Model CL-01 "Vanguard Arm" specs.txt', price: 75000 },
+        { name: 'Model CL-09 "Ethereal Arm"', image: 'Model CL-09 “Ethereal Arm”.png', specs: 'Model CL-09 "Ethereal Arm" specs.txt', price: 85000 },
+        { name: 'Model CL-12 "Aegis Arm"', image: 'Model CL-12 “Aegis Arm”.png', specs: 'Model CL-12 "Aegis Arm" specs.txt', price: 95000 },
+        { name: 'Model CL-17 "Seraph Arm"', image: 'Model CL-17 “Seraph Arm”.png', specs: 'Model CL-17 "Seraph Arm" specs.txt', price: 105000 },
+        { name: 'Model CL-21 "Specter Arm"', image: 'Model CL-21 “Specter Arm”.png', specs: 'Model CL-21 "Specter Arm" specs.txt', price: 115000 },
+        { name: 'Model CL-32 "Obsidian Reign"', image: 'Model CL-32 “Obsidian Reign”.png', specs: 'Model CL-32 "Obsidian Reign" specs.txt', price: 135000 },
+        { name: 'Model CL-47 "Iron Dominion"', image: 'Model CL-47 “Iron Dominion”.png', specs: 'Model CL-47 "Iron Dominion" specs.txt', price: 155000 },
+        { name: 'Model CL-58 "Nightshade Warden"', image: 'Model CL-58 “Nightshade Warden”.png', specs: 'Model CL-58 "Nightshade Warden" specs.txt', price: 175000 },
+        { name: 'Model CL-62 "Eidolon Veil"', image: 'Model CL-62 “Eidolon Veil”.png', specs: 'Model CL-62 "Eidolon Veil" specs.txt', price: 195000 }
     ],
     'ocular-enhancement-systems': [
-        { name: 'Model OE-09 "Specter Core"', image: 'Model OE-09 "Specter Core".png', specs: 'Model OE-09 "Specter Core" specs.txt', price: 65000 },
-        { name: 'Model OE-21 "Argus Orb"', image: 'Model OE-21 "Argus Orb".png', specs: 'Model OE-21 "Argus Orb" specs.txt', price: 75000 },
-        { name: 'Model OE-37 "Inferno Sight"', image: 'Model OE-37 "Inferno Sight".png', specs: 'Model OE-37 "Inferno Sight" specs.txt', price: 85000 },
-        { name: 'Model OE-450 "Omega Prime"', image: 'Model OE-450 "Omega Prime".png', specs: 'Model OE-450 "Omega Prime" specs.txt', price: 125000 }
+        { name: 'Model OE-09 "Specter Core"', image: 'Model OE-09 “Specter Core”.png', specs: 'Model OE-09 "Specter Core" specs.txt', price: 65000 },
+        { name: 'Model OE-21 "Argus Orb"', image: 'Model OE-21 “Argus Orb”.png', specs: 'Model OE-21 "Argus Orb" specs.txt', price: 75000 },
+        { name: 'Model OE-37 "Inferno Sight"', image: 'Model OE-37 “Inferno Sight”.png', specs: 'Model OE-37 "Inferno Sight" specs.txt', price: 85000 },
+        { name: 'Model OE-450 "Omega Prime"', image: 'Model OE-450 “Omega Prime”.png', specs: 'Model OE-450 "Omega Prime" specs.txt', price: 125000 }
     ],
     'neural-processing-units': [
-        { name: 'Model NPU-212 "Crimson Vortex"', image: 'Model NPU-212 "Crimson Vortex".png', specs: 'Model NPU-212 "Crimson Vortex" specs.txt', price: 165000 },
-        { name: 'Model NPU-88 "Cerebra Forge"', image: 'Model NPU-88 "Cerebra Forge".png', specs: 'Model NPU-88 "Cerebra Forge" specs.txt', price: 135000 },
-        { name: 'Model NPU-99 "Eclipse Node"', image: 'Model NPU-99 "Eclipse Node".png', specs: 'Model NPU-99 "Eclipse Node" specs.txt', price: 155000 }
+        { name: 'Model NPU-212 "Crimson Vortex"', image: 'Model NPU-212 “Crimson Vortex”.png', specs: 'Model NPU-212 "Crimson Vortex" specs.txt', price: 165000 },
+        { name: 'Model NPU-88 "Cerebra Forge"', image: 'Model NPU-88 “Cerebra Forge”.png', specs: 'Model NPU-88 "Cerebra Forge" specs.txt', price: 135000 },
+        { name: 'Model NPU-99 "Eclipse Node"', image: 'Model NPU-99 “Eclipse Node”.png', specs: 'Model NPU-99 "Eclipse Node" specs.txt', price: 155000 }
     ],
     'dermal-armor-systems': [
-        { name: 'Model DAS-09 "Aegis Weave"', image: 'Model DAS-09 "Aegis Weave".png', specs: 'Model DAS-09 "Aegis Weave" specs.txt', price: 85000 },
-        { name: 'Model DAS-14 "Helix Shroud"', image: 'Model DAS-14 "Helix Shroud".png', specs: 'Model DAS-14 "Helix Shroud" specs.txt', price: 105000 }
+        { name: 'Model DAS-09 "Aegis Weave"', image: 'Model DAS-09 “Aegis Weave”.png', specs: 'Model DAS-09 "Aegis Weave" specs.txt', price: 85000 },
+        { name: 'Model DAS-14 "Helix Shroud"', image: 'Model DAS-14 “Helix Shroud”.png', specs: 'Model DAS-14 "Helix Shroud" specs.txt', price: 105000 }
     ]
 };
 

@@ -121,6 +121,25 @@
 
 ---
 
+## [2024-12-XX] - Fix Product Image Loading (Curly Quotes)
+
+### Changes Made:
+
+1. **Fixed Image Filename Quote Mismatch** (`js/products.js`)
+   - Created Python script to replace all straight quotes (`"`) with curly quotes (`"` and `"`) in image filenames
+   - Updated all 23 product image filenames across all 5 product categories
+   - Image filenames now match actual filenames in assets folders
+
+### Files Changed:
+- `js/products.js` (fix image filename quotes)
+
+### Problem Fixed:
+- Product images were not displaying on product category pages
+- Root cause: JavaScript used straight quotes (`"`) in image filenames, but actual filenames use curly quotes (`"` and `"`), causing URL encoding mismatch
+- Solution: Replaced all straight quotes with curly quotes in image filenames using Python script, ensuring JavaScript filenames match actual filenames
+
+---
+
 ## [2024-12-XX] - Simple Mobile Audio Reinitialize
 
 ### Changes Made:
