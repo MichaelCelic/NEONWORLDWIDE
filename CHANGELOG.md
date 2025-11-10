@@ -41,3 +41,49 @@
 
 ---
 
+## [2024-12-XX] - Fix Mobile Music Playback Issue
+
+### Changes Made:
+
+1. **Fixed Mobile Audio Initialization** (`js/main.js`)
+   - Updated `initializeAudio()` function to always try to start playing muted audio on mobile (even if `shouldBePlaying` is false)
+   - This ensures audio is loaded and ready when user interacts
+   - Changed condition on line 264 to include mobile without saved state: `|| (isMobile && !savedPlayingState)`
+
+2. **Enhanced Audio Readiness Check on User Interaction** (`js/main.js`)
+   - Completely rewrote `unmuteAudioOnInteraction()` function to check if audio is ready before trying to play
+   - Added `ensureAudioPlaying()` function that checks `readyState >= 2` before attempting to play
+   - If audio is not ready, waits for `canplay` event before playing
+   - Added better retry logic that waits for audio to be ready instead of just retrying after delay
+   - Forces audio to load if `readyState === 0` (not started loading)
+   - Improved error handling with multiple retry strategies
+
+### Files Changed:
+- `js/main.js` (fix mobile music playback)
+
+### Problem Fixed:
+- Music was not playing on mobile when user interacted with the website
+- Root cause: Audio never started playing initially on mobile, so when user interacted, audio wasn't ready/loaded
+- Solution: Ensure audio starts playing (muted) on mobile initial load, and check audio readiness before playing on user interaction
+
+---
+
+## [2024-12-XX] - Fix Product Image Loading Issue
+
+### Changes Made:
+
+1. **Fixed Image Filename Quote Mismatch** (`js/products.js`)
+   - Updated all image filenames in the `products` data structure to use curly quotes (`"` and `"`) instead of straight quotes (`"`)
+   - This matches the actual filenames in the assets folders which use curly quotes
+   - Fixed all 23 product image filenames across all 5 product categories
+
+### Files Changed:
+- `js/products.js` (fix image filename quotes)
+
+### Problem Fixed:
+- Product images were not displaying on product category pages
+- Root cause: JavaScript used straight quotes (`"`) in image filenames, but actual filenames use curly quotes (`"` and `"`), causing URL encoding mismatch
+- Solution: Updated all image filenames in JavaScript to use curly quotes matching the actual filenames
+
+---
+
