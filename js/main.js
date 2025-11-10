@@ -383,9 +383,27 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Save unmuted state
                             saveAudioState();
                             
-                            // Ensure audio is playing
+                            // Ensure audio is playing - especially important for mobile
                             if (backgroundMusic.paused) {
-                                playAudio();
+                                const playPromise = backgroundMusic.play();
+                                if (playPromise !== undefined) {
+                                    playPromise.then(function() {
+                                        shouldBePlaying = true;
+                                        saveAudioState();
+                                    }).catch(function(error) {
+                                        console.log('Audio play error on interaction:', error);
+                                        // Try again after a short delay
+                                        setTimeout(function() {
+                                            if (backgroundMusic.paused) {
+                                                playAudio();
+                                            }
+                                        }, 200);
+                                    });
+                                }
+                            } else {
+                                // Already playing, just update state
+                                shouldBePlaying = true;
+                                saveAudioState();
                             }
                         } catch (error) {
                             console.log('Audio unmute error:', error);
@@ -396,11 +414,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Only listen for unmute if audio hasn't been unmuted yet
                 if (!audioUnmuted) {
                     // Listen for first user interaction to unmute audio
-                    document.addEventListener('click', unmuteAudioOnInteraction, { once: true, passive: true });
-                    document.addEventListener('touchstart', unmuteAudioOnInteraction, { once: true, passive: true });
-                    document.addEventListener('scroll', unmuteAudioOnInteraction, { once: true, passive: true });
-                    document.addEventListener('mousemove', unmuteAudioOnInteraction, { once: true, passive: true });
-                    document.addEventListener('touchend', unmuteAudioOnInteraction, { once: true, passive: true });
+                    // Use capture phase and multiple events for better mobile compatibility
+                    const interactionEvents = ['click', 'touchstart', 'scroll', 'mousemove', 'touchend', 'keydown'];
+                    interactionEvents.forEach(function(eventType) {
+                        document.addEventListener(eventType, unmuteAudioOnInteraction, { once: true, passive: true, capture: true });
+                    });
                 }
                 
                 // Handle audio errors
