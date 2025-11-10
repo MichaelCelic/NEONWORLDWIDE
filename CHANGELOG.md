@@ -87,34 +87,37 @@
 
 ---
 
-## [2024-12-XX] - Restore Working Music Initialization Logic
+## [2024-12-XX] - Restore Working Audio Logic
 
 ### Changes Made:
 
-1. **Simplified `unmuteAudioOnInteraction` Function** (`js/main.js`)
-   - Restored the simpler version from the working codebase
-   - Removed complex `ensureAudioPlaying` function with `readyState` checks and retry logic
-   - Now simply calls `playAudio()` if audio is paused, matching the working version
-   - This simpler approach is more reliable on mobile devices
+1. **Simplified `initializeAudio()` Function** (`js/main.js`)
+   - Removed complex condition: `if (shouldBePlaying || (!isMobile && savedPlayingState) || (isMobile && !savedPlayingState))`
+   - Restored simple condition: `if (shouldBePlaying)`
+   - Removed mobile-specific initialization that forced playback
+   - Removed logic that reset `shouldBePlaying = false` on mobile (lines 245-249)
 
-2. **Simplified Event Listeners** (`js/main.js`)
+2. **Simplified `unmuteAudioOnInteraction()` Function** (`js/main.js`)
+   - Removed complex `ensureAudioPlaying()` function with `readyState` checks and retry logic
+   - Restored simple logic: just unmute and call `playAudio()` if paused
+   - Matches the working version's implementation
+
+3. **Simplified Event Listeners** (`js/main.js`)
    - Removed `capture: true` option from event listeners
    - Removed `keydown` event from interaction events
-   - Restored the original 5 event listeners: `click`, `touchstart`, `scroll`, `mousemove`, `touchend`
-   - Matches the working version's event listener setup
+   - Restored original 5 events: `click`, `touchstart`, `scroll`, `mousemove`, `touchend`
 
-3. **Reverted `initializeAudio` Condition** (`js/main.js`)
-   - Changed condition back to: `if (shouldBePlaying || (!isMobile && savedPlayingState))`
-   - Removed the extra mobile condition that was added in previous fix
-   - Matches the working version's logic
+4. **Simplified `canplay` Event Listener** (`js/main.js`)
+   - Restored simple condition: `if (shouldBePlaying && backgroundMusic.paused)`
+   - Removed complex mobile condition
 
 ### Files Changed:
-- `js/main.js` (restore working music initialization)
+- `js/main.js` (restore simpler audio logic)
 
 ### Problem Fixed:
 - Music was not playing on mobile when user interacted with the website
-- Root cause: Over-complicated `unmuteAudioOnInteraction` function with complex retry logic was failing
-- Solution: Restored the simpler, working version that directly calls `playAudio()` without complex state checks
+- Root cause: Over-complicated `unmuteAudioOnInteraction` function with complex retry logic was failing. The complex `ensureAudioPlaying()` function with `readyState` checks and multiple retry strategies was breaking the mobile workaround.
+- Solution: Restored the simpler, working version that directly calls `playAudio()` without complex state checks. The working version doesn't try to force initial playback on mobile—it waits for user interaction and then plays simply and directly.
 
 ---
 

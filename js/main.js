@@ -241,25 +241,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 };
                 
-                // Mobile fallback: restart audio from beginning on each page
-                if (isMobile && !savedPlayingState) {
-                    // On mobile, if audio wasn't playing before, start fresh
-                    shouldBePlaying = false;
-                    savedAudioTime = null;
-                }
-                
                 // Start playing audio (will continue from saved time if available)
                 // Wait for metadata to load if needed
                 const initializeAudio = function() {
-                    if (!isMobile || savedPlayingState) {
-                        // PC or mobile with saved state - restore position
-                        restoreAudioState();
-                    } else {
-                        // Mobile without saved state - start from beginning
-                        backgroundMusic.currentTime = 0;
-                    }
-                    
-                    if (shouldBePlaying || (!isMobile && savedPlayingState)) {
+                    restoreAudioState();
+                    if (shouldBePlaying) {
                         // Small delay to ensure page is fully loaded (helps on mobile)
                         setTimeout(function() {
                             playAudio();
@@ -277,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, { once: true });
                     // Also try to initialize immediately if metadata loads quickly
                     backgroundMusic.addEventListener('canplay', function() {
-                        if ((shouldBePlaying || (!isMobile && savedPlayingState)) && backgroundMusic.paused) {
+                        if (shouldBePlaying && backgroundMusic.paused) {
                             initializeAudio();
                         }
                     }, { once: true });
