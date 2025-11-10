@@ -87,3 +87,34 @@
 
 ---
 
+## [2024-12-XX] - Restore Working Music Initialization Logic
+
+### Changes Made:
+
+1. **Simplified `unmuteAudioOnInteraction` Function** (`js/main.js`)
+   - Restored the simpler version from the working codebase
+   - Removed complex `ensureAudioPlaying` function with `readyState` checks and retry logic
+   - Now simply calls `playAudio()` if audio is paused, matching the working version
+   - This simpler approach is more reliable on mobile devices
+
+2. **Simplified Event Listeners** (`js/main.js`)
+   - Removed `capture: true` option from event listeners
+   - Removed `keydown` event from interaction events
+   - Restored the original 5 event listeners: `click`, `touchstart`, `scroll`, `mousemove`, `touchend`
+   - Matches the working version's event listener setup
+
+3. **Reverted `initializeAudio` Condition** (`js/main.js`)
+   - Changed condition back to: `if (shouldBePlaying || (!isMobile && savedPlayingState))`
+   - Removed the extra mobile condition that was added in previous fix
+   - Matches the working version's logic
+
+### Files Changed:
+- `js/main.js` (restore working music initialization)
+
+### Problem Fixed:
+- Music was not playing on mobile when user interacted with the website
+- Root cause: Over-complicated `unmuteAudioOnInteraction` function with complex retry logic was failing
+- Solution: Restored the simpler, working version that directly calls `playAudio()` without complex state checks
+
+---
+

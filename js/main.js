@@ -259,9 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         backgroundMusic.currentTime = 0;
                     }
                     
-                    // On mobile, always try to start playing muted audio (even if shouldBePlaying is false)
-                    // This ensures audio is ready when user interacts
-                    if (shouldBePlaying || (!isMobile && savedPlayingState) || (isMobile && !savedPlayingState)) {
+                    if (shouldBePlaying || (!isMobile && savedPlayingState)) {
                         // Small delay to ensure page is fully loaded (helps on mobile)
                         setTimeout(function() {
                             playAudio();
@@ -385,76 +383,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Save unmuted state
                             saveAudioState();
                             
-                            // Ensure audio is playing - especially important for mobile
-                            const ensureAudioPlaying = function() {
-                                if (backgroundMusic.paused) {
-                                    // Check if audio is ready to play
-                                    if (backgroundMusic.readyState >= 2) {
-                                        // Audio is ready, try to play
-                                        const playPromise = backgroundMusic.play();
-                                        if (playPromise !== undefined) {
-                                            playPromise.then(function() {
-                                                shouldBePlaying = true;
-                                                saveAudioState();
-                                            }).catch(function(error) {
-                                                console.log('Audio play error on interaction:', error);
-                                                // Wait for audio to be ready and retry
-                                                if (backgroundMusic.readyState < 2) {
-                                                    backgroundMusic.addEventListener('canplay', function() {
-                                                        const retryPromise = backgroundMusic.play();
-                                                        if (retryPromise !== undefined) {
-                                                            retryPromise.then(function() {
-                                                                shouldBePlaying = true;
-                                                                saveAudioState();
-                                                            }).catch(function(err) {
-                                                                console.log('Audio play retry error:', err);
-                                                            });
-                                                        }
-                                                    }, { once: true });
-                                                } else {
-                                                    // Audio is ready but play failed, retry after delay
-                                                    setTimeout(function() {
-                                                        if (backgroundMusic.paused) {
-                                                            playAudio();
-                                                        }
-                                                    }, 300);
-                                                }
-                                            });
-                                        }
-                                    } else {
-                                        // Audio not ready yet, wait for it to be ready
-                                        backgroundMusic.addEventListener('canplay', function() {
-                                            const playPromise = backgroundMusic.play();
-                                            if (playPromise !== undefined) {
-                                                playPromise.then(function() {
-                                                    shouldBePlaying = true;
-                                                    saveAudioState();
-                                                }).catch(function(error) {
-                                                    console.log('Audio play error after canplay:', error);
-                                                    // Final retry
-                                                    setTimeout(function() {
-                                                        if (backgroundMusic.paused) {
-                                                            playAudio();
-                                                        }
-                                                    }, 300);
-                                                });
-                                            }
-                                        }, { once: true });
-                                        
-                                        // Force load if not already loading
-                                        if (backgroundMusic.readyState === 0) {
-                                            backgroundMusic.load();
-                                        }
-                                    }
-                                } else {
-                                    // Already playing, just update state
-                                    shouldBePlaying = true;
-                                    saveAudioState();
-                                }
-                            };
-                            
-                            // Try to ensure audio is playing
-                            ensureAudioPlaying();
+                            // Ensure audio is playing
+                            if (backgroundMusic.paused) {
+                                playAudio();
+                            }
                         } catch (error) {
                             console.log('Audio unmute error:', error);
                         }
@@ -464,11 +396,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Only listen for unmute if audio hasn't been unmuted yet
                 if (!audioUnmuted) {
                     // Listen for first user interaction to unmute audio
-                    // Use capture phase and multiple events for better mobile compatibility
-                    const interactionEvents = ['click', 'touchstart', 'scroll', 'mousemove', 'touchend', 'keydown'];
-                    interactionEvents.forEach(function(eventType) {
-                        document.addEventListener(eventType, unmuteAudioOnInteraction, { once: true, passive: true, capture: true });
-                    });
+                    document.addEventListener('click', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('touchstart', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('scroll', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('mousemove', unmuteAudioOnInteraction, { once: true, passive: true });
+                    document.addEventListener('touchend', unmuteAudioOnInteraction, { once: true, passive: true });
                 }
                 
                 // Handle audio errors
