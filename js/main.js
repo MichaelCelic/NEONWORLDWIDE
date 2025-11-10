@@ -200,22 +200,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 const savedUnmutedState = savedState.unmuted;
                 const savedPlayingState = savedState.playing;
         
-        // Restore unmuted state if it was already unmuted
-        if (savedUnmutedState) {
-            backgroundMusic.muted = false;
-            audioUnmuted = true;
-        } else {
-            // Ensure audio is muted initially if not already unmuted
+        // On mobile, reset audio state on every page load (treat as fresh start)
+        // On PC, restore state normally
+        if (isMobile) {
+            // Mobile: Always start fresh (muted, not playing)
             backgroundMusic.muted = true;
-        }
-        
-        // Set shouldBePlaying flag if audio was playing before
-        if (savedPlayingState) {
-            shouldBePlaying = true;
+            audioUnmuted = false;
+            shouldBePlaying = false;
+        } else {
+            // PC: Restore unmuted state if it was already unmuted
+            if (savedUnmutedState) {
+                backgroundMusic.muted = false;
+                audioUnmuted = true;
+            } else {
+                // Ensure audio is muted initially if not already unmuted
+                backgroundMusic.muted = true;
+            }
+            
+            // Set shouldBePlaying flag if audio was playing before
+            if (savedPlayingState) {
+                shouldBePlaying = true;
+            }
         }
         
         // Wait for audio to be ready before restoring time position
         const restoreAudioState = function() {
+            // On mobile, don't restore time position - start from beginning
+            if (isMobile) {
+                backgroundMusic.currentTime = 0;
+                return;
+            }
+            
+            // PC: Restore time position if available
             if (savedAudioTime !== null) {
                 const targetTime = parseFloat(savedAudioTime);
                 // Only set time if audio duration is loaded and time is valid
@@ -297,7 +313,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
                 // Restore audio state on pageshow (when page becomes visible again on mobile)
                 window.addEventListener('pageshow', function(event) {
-                    // Load state from IndexedDB/sessionStorage
+                    // On mobile, don't restore state - treat as fresh start
+                    if (isMobile) {
+                        // Mobile: Reset state and wait for user interaction
+                        backgroundMusic.muted = true;
+                        audioUnmuted = false;
+                        shouldBePlaying = false;
+                        return;
+                    }
+                    
+                    // PC: Load state from IndexedDB/sessionStorage
                     loadAudioState(function(savedState) {
                         const savedTime = savedState.currentTime;
                         const wasPlaying = savedState.playing;
@@ -315,14 +340,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             // Wait for audio to be ready
                             const restoreAndPlay = function() {
-                                if (!isMobile || wasPlaying) {
-                                    // PC or mobile with saved state - restore position
-                                    if (backgroundMusic.duration && !isNaN(targetTime) && targetTime < backgroundMusic.duration) {
-                                        backgroundMusic.currentTime = targetTime;
-                                    }
-                                } else {
-                                    // Mobile without saved state - start from beginning
-                                    backgroundMusic.currentTime = 0;
+                                // PC: Restore position
+                                if (backgroundMusic.duration && !isNaN(targetTime) && targetTime < backgroundMusic.duration) {
+                                    backgroundMusic.currentTime = targetTime;
                                 }
                                 setTimeout(function() {
                                     playAudio();
@@ -379,8 +399,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 };
                 
-                // Only listen for unmute if audio hasn't been unmuted yet
-                if (!audioUnmuted) {
+                // Always set up interaction listeners on mobile (regardless of saved state)
+                // On PC, only set up if audio hasn't been unmuted yet
+                if (!audioUnmuted || isMobile) {
                     // Listen for first user interaction to unmute audio
                     document.addEventListener('click', unmuteAudioOnInteraction, { once: true, passive: true });
                     document.addEventListener('touchstart', unmuteAudioOnInteraction, { once: true, passive: true });

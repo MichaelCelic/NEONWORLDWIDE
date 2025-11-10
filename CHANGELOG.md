@@ -121,3 +121,32 @@
 
 ---
 
+## [2024-12-XX] - Simple Mobile Audio Reinitialize
+
+### Changes Made:
+
+1. **Reset Audio State on Mobile Page Load** (`js/main.js`)
+   - On mobile, reset `audioUnmuted = false` and `shouldBePlaying = false` on every page load
+   - Treat every page load on mobile as a fresh start
+   - Keep PC behavior unchanged (restore state normally)
+
+2. **Always Set Up Interaction Listeners on Mobile** (`js/main.js`)
+   - Changed condition from `if (!audioUnmuted)` to `if (!audioUnmuted || isMobile)`
+   - This ensures listeners are always set up on mobile, regardless of saved state
+   - On PC, keep current behavior (only set up if not unmuted)
+
+3. **Skip State Restoration on Mobile** (`js/main.js`)
+   - Updated `restoreAudioState()` to skip time position restoration on mobile
+   - Updated `pageshow` event handler to skip state restoration on mobile
+   - Mobile always starts from beginning (currentTime = 0)
+
+### Files Changed:
+- `js/main.js` (simple mobile audio reinitialize logic)
+
+### Problem Fixed:
+- On mobile, when navigating between pages, audio state was restored but interaction listeners weren't set up because `audioUnmuted` was already `true`, so audio never resumed
+- Root cause: Mobile browsers pause media on navigation, but the code tried to persist state across pages, causing listeners to not be set up
+- Solution: On mobile, don't persist audio state across pages. Instead, reset state on every page load and always set up interaction listeners. When user interacts, unmute and play (same simple logic as first page). This avoids complex state checking on mobile while keeping PC behavior unchanged.
+
+---
+
